@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>智慧教育平台</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.0/dist/tailwind.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
     <script>
         tailwind.config = {
@@ -162,7 +162,7 @@
 </div>
 
 <script>
-// 账号系统
+// 账号登录系统
 const validUsers = {
     "2301630111": "123456"
 };
@@ -183,7 +183,7 @@ function logout() {
     document.getElementById('main-page').classList.add('hidden');
 }
 
-// 页面切换
+// 页面模块切换
 function showTab(tab) {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
     document.querySelectorAll('.nav-btn').forEach(el => {
@@ -195,7 +195,7 @@ function showTab(tab) {
     document.querySelector(`.tab-${tab}`).classList.remove('text-gray-600');
 }
 
-// 真实免费AI大模型 上线无跨域版
+// 免费可用AI大模型对话功能（上线无跨域）
 async function sendChat(){
     const input = document.getElementById('chat-input');
     const content = input.value.trim();
@@ -214,7 +214,6 @@ async function sendChat(){
     box.appendChild(loading);
 
     try{
-        // 国内永久免费AI接口，上线网站完美兼容无跨域
         const res = await fetch("https://api.52vmy.cn/api/chat/gpt?msg="+encodeURIComponent(content));
         const json = await res.json();
         const reply = json.data;
@@ -230,7 +229,7 @@ async function sendChat(){
     }
 }
 
-// 知识图谱内容
+// 知识图谱内容展示
 function showGraph(subject) {
     const content = document.getElementById('graph-content');
     const data = {
@@ -256,16 +255,16 @@ function showGraph(subject) {
         <div class="text-center">
             <h3 class="font-bold text-xl text-orange-600">英语知识图谱</h3>
             <div class="mt-4 text-left max-w-2xl mx-auto space-y-2">
-                <p>🔹 字母音标 → 单词词汇 → 基础句型</p>
-                <p>🔹 一般时态 → 进行时态 → 完成时态</p>
-                <p>🔹 听力口语 → 阅读理解 → 书面写作</p>
+                <p>🔹 单词语法 → 基础句型</p>
+                <p>🔹 八大时态完整体系</p>
+                <p>🔹 听力阅读、写作综合运用</p>
             </div>
         </div>`
     };
     content.innerHTML = data[subject];
 }
 
-// 育儿游戏剧情
+// 育儿游戏剧情分支
 function gameChoose(option) {
     const title = document.getElementById('game-title');
     const desc = document.getElementById('game-desc');
@@ -279,7 +278,7 @@ function gameChoose(option) {
         desc.textContent = "公平约定让孩子主动优先完成作业，合理享受娱乐时间，时间管理能力稳步提升。";
     } else {
         title.textContent = "结局：完美正向成长结局";
-        desc.textContent = "平等沟通陪伴让孩子理解学习意义，兼顾成长与娱乐，亲子亲密关系提升，综合能力全面发展。";
+        desc.textContent = "平等沟通陪伴让孩子理解学习意义，兼顾娱乐与学习，亲子亲密关系提升，综合能力全面发展。";
     }
     options.innerHTML = `<button onclick="resetGame()" class="w-full bg-primary text-white py-3 rounded-lg">重新开始模拟体验</button>`;
 }
@@ -298,7 +297,7 @@ function resetGame() {
         </div>
         <div class="game-option" onclick="gameChoose(3)">
             陪孩子一起制定学习+娱乐计划
-            <div class="text-xs text-primary mt-1">效果：亲子关系 +10，自律 +10</div>
+            <div class="text-xs text-primary mt-1">效果：亲子亲密+10，自律+10</div>
         </div>
     `;
 }

@@ -1,307 +1,111 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>智慧教育平台</title>
-    <!-- 国内jsdelivr稳定CDN，GitHub100%可加载 -->
-    <script src="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.0/dist/tailwind.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#165DFF',
-                        secondary: '#0FC6C2',
-                        neutral: '#F5F7FA',
-                        dark: '#1D2129',
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui']
-                    }
-                }
-            }
-        }
-    </script>
-    <style type="text/tailwindcss">
-        @layer utilities {
-            .card-shadow {
-                box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            }
-            .animate-fade {
-                animation: fade 0.3s ease;
-            }
-            .game-option {
-                @apply bg-white border-2 border-primary/20 p-4 rounded-xl hover:bg-primary/5 hover:border-primary transition-all cursor-pointer;
-            }
-        }
-        @keyframes fade {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>智慧教育平台</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
+body{background:#f5f7fa;padding:20px}
+.login-box{width:350px;margin:100px auto;background:#fff;padding:30px;border-radius:16px;box-shadow:0 2px 12px #0001}
+.login-box h1{text-align:center;color:#165DFF;margin-bottom:20px;font-size:22px}
+.login-box p{text-align:center;color:#666;margin-bottom:25px;font-size:14px}
+.form-item{margin-bottom:15px}
+.form-item label{display:block;margin-bottom:6px;font-size:14px;color:#333}
+.form-item input{width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:15px}
+button{width:100%;padding:12px;background:#165DFF;color:#fff;border:none;border-radius:8px;font-size:16px;cursor:pointer}
+.tip{margin-top:20px;text-align:center;font-size:12px;color:#999}
+#main{display:none}
+.nav{display:flex;gap:30px;padding:15px;background:#fff;margin-bottom:20px;border-radius:8px}
+.nav button{width:auto;padding:6px 12px;background:#eee;color:#333;border:none;border-radius:6px}
+.nav button.active{background:#165DFF;color:#fff}
+.tab{display:none}
+.tab.active{display:block}
+.chat-box{height:400px;background:#fff;padding:15px;border-radius:8px;overflow-y:auto;margin-bottom:15px}
+.msg{max-width:70%;margin-bottom:10px;padding:10px;border-radius:10px}
+.you{background:#165DFF;color:#fff;margin-left:auto}
+.ai{background:#e9f2ff;color:#333;margin-right:auto}
+.chat-input{display:flex;gap:10px}
+.chat-input input{flex:1;padding:12px;border:1px solid #ddd;border-radius:8px}
+</style>
 </head>
-<body class="bg-neutral min-h-screen">
+<body>
+
 <!-- 登录页面 -->
-<div id="login-page" class="flex min-h-screen items-center justify-center p-4">
-    <div class="w-full max-w-md bg-white rounded-2xl p-8 card-shadow">
-        <div class="text-center mb-8">
-            <h1 class="text-[clamp(1.5rem,3vw,2rem)] font-bold text-primary">智慧教育平台</h1>
-            <p class="text-gray-500 mt-2">学生课堂AI助手 · 知识图谱 · 家长育儿模拟</p>
-        </div>
-        <div class="space-y-4">
-            <div>
-                <label class="text-sm font-medium">学号</label>
-                <input id="student-id" placeholder="请输入学号" class="w-full mt-1 px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary">
-            </div>
-            <div>
-                <label class="text-sm font-medium">密码</label>
-                <input id="student-pwd" type="password" placeholder="请输入密码" class="w-full mt-1 px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary">
-                <p class="text-xs text-gray-400 mt-1">无需手机验证，快速登录课堂</p>
-            </div>
-            <button onclick="login()" class="w-full bg-primary text-white py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors">登录进入平台</button>
-        </div>
-        <div class="text-center text-xs text-gray-400 mt-8">
-            专属账号：2301630111 / 123456
-        </div>
-    </div>
+<div id="login">
+<div class="login-box">
+<h1>智慧教育平台</h1>
+<p>学生课堂AI助手 | 知识图谱 | 育儿模拟</p>
+<div class="form-item">
+<label>学号</label>
+<input type="text" id="sid" placeholder="请输入学号">
+</div>
+<div class="form-item">
+<label>密码</label>
+<input type="password" id="spw" placeholder="请输入密码">
+</div>
+<button onclick="login()">登录进入平台</button>
+<div class="tip">账号：2301630111 &nbsp; 密码：123456</div>
+</div>
 </div>
 
-<!-- 主平台 -->
-<div id="main-page" class="hidden">
-    <!-- 导航 -->
-    <nav class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-            <h1 class="text-primary font-bold text-xl">智慧教育平台</h1>
-            <div class="flex gap-6">
-                <button onclick="showTab('ai')" class="nav-btn tab-ai text-primary font-medium">AI问答</button>
-                <button onclick="showTab('graph')" class="nav-btn tab-graph text-gray-600">知识图谱</button>
-                <button onclick="showTab('game')" class="nav-btn tab-game text-gray-600">育儿模拟</button>
-                <button onclick="logout()" class="text-red-500"><i class="fa fa-sign-out"></i> 退出登录</button>
-            </div>
-        </div>
-    </nav>
+<!-- 主页面 -->
+<div id="main">
+<div class="nav">
+<button class="active" onclick="show('ai')">AI问答</button>
+<button onclick="show('graph')">知识图谱</button>
+<button onclick="show('game')">育儿模拟</button>
+<button onclick="backLogin()">退出</button>
+</div>
 
-    <!-- 内容区 -->
-    <div class="max-w-7xl mx-auto px-4 py-6">
-        <!-- AI问答 -->
-        <div id="ai-tab" class="tab-content animate-fade">
-            <div class="bg-white rounded-xl p-6 card-shadow h-[75vh] flex flex-col">
-                <h2 class="text-lg font-bold mb-4">📚 课堂AI助手（原生大模型）</h2>
-                <div class="flex-1 overflow-y-auto mb-4 p-4 bg-neutral rounded-lg" id="chat-box">
-                    <div class="bg-primary/10 p-3 rounded-lg mb-4 inline-block max-w-[80%]">
-                        你好！我是你的专属智能AI助手，你可以任意提问，我会完整智能解答所有问题。
-                    </div>
-                </div>
-                <div class="flex gap-3">
-                    <input id="chat-input" placeholder="输入你的问题..." class="flex-1 px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary/30">
-                    <button onclick="sendChat()" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition">发送</button>
-                </div>
-            </div>
-        </div>
+<div id="ai" class="tab active">
+<div class="chat-box" id="chat">
+<div class="msg ai">你好！我是你的专属AI助手，你可以提问任何问题。</div>
+</div>
+<div class="chat-input">
+<input id="msg" placeholder="输入问题...">
+<button onclick="send()">发送</button>
+</div>
+</div>
 
-        <!-- 知识图谱 -->
-        <div id="graph-tab" class="tab-content hidden animate-fade">
-            <div class="bg-white rounded-xl p-6 card-shadow">
-                <h2 class="text-lg font-bold mb-4">🗺️ 学科知识图谱</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="bg-blue-50 p-4 rounded-xl cursor-pointer hover:bg-blue-100 transition-colors" onclick="showGraph('math')">
-                        <h3 class="font-bold text-blue-600">数学</h3>
-                        <p class="text-sm text-gray-600">代数、几何、函数、统计</p>
-                    </div>
-                    <div class="bg-green-50 p-4 rounded-xl cursor-pointer hover:bg-green-100 transition-colors" onclick="showGraph('chinese')">
-                        <h3 class="font-bold text-green-600">语文</h3>
-                        <p class="text-sm text-gray-600">阅读、写作、古诗、文言文</p>
-                    </div>
-                    <div class="bg-orange-50 p-4 rounded-xl cursor-pointer hover:bg-orange-100 transition-colors" onclick="showGraph('english')">
-                        <h3 class="font-bold text-orange-600">英语</h3>
-                        <p class="text-sm text-gray-600">词汇、语法、听说读写</p>
-                    </div>
-                </div>
-                <div class="mt-6 h-[500px] bg-neutral rounded-xl p-4 flex items-center justify-center">
-                    <div id="graph-content" class="text-center">
-                        <i class="fa fa-map-o text-5xl text-gray-300 mb-2"></i>
-                        <p class="text-gray-500">点击上方学科查看知识图谱</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div id="graph" class="tab">
+<h3 style="margin-bottom:15px">学科知识图谱</h3>
+<p>数学：基础运算 → 代数 → 函数 → 几何</p>
+<p>语文：字词 → 阅读 → 文言文 → 写作</p>
+<p>英语：词汇 → 语法 → 时态 → 读写</p>
+</div>
 
-        <!-- 育儿Galgame -->
-        <div id="game-tab" class="tab-content hidden animate-fade">
-            <div class="bg-white rounded-xl p-6 card-shadow h-[75vh] flex flex-col">
-                <h2 class="text-lg font-bold mb-4">👨‍👩‍👧 家长育儿决策模拟器</h2>
-                <div class="flex-1 bg-neutral rounded-lg p-5 relative">
-                    <div id="game-scene" class="h-full flex flex-col justify-between">
-                        <div id="game-title" class="font-bold text-center text-lg mb-4">孩子放学回家一直玩手机</div>
-                        <div id="game-desc" class="text-gray-700 text-center mb-6">
-                            孩子放学回家，作业没写就开始玩手机游戏，你会怎么做？
-                        </div>
-                        <div class="space-y-3" id="game-options">
-                            <div class="game-option" onclick="gameChoose(1)">
-                                直接没收手机，严厉批评
-                                <div class="text-xs text-red-500 mt-1">后果：亲子关系 -20</div>
-                            </div>
-                            <div class="game-option" onclick="gameChoose(2)">
-                                约定写完作业后可以玩30分钟
-                                <div class="text-xs text-green-500 mt-1">效果：自律习惯 +15</div>
-                            </div>
-                            <div class="game-option" onclick="gameChoose(3)">
-                                陪孩子一起制定学习+娱乐计划
-                                <div class="text-xs text-primary mt-1">效果：亲子亲密+10，自律+10</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-4 text-center text-sm text-gray-500">
-                    你的每一个选择，都会影响孩子的成长方向
-                </div>
-            </div>
-        </div>
-    </div>
+<div id="game" class="tab">
+<h3 style="margin-bottom:15px">育儿模拟小游戏</h3>
+<p>场景：孩子放学一直玩手机不写作业</p>
+<p>1. 严厉批评没收手机 → 亲子关系变差，孩子叛逆</p>
+<p>2. 约定写完作业再玩 → 养成自律习惯</p>
+<p>3. 共同制定计划 → 最优成长结局</p>
+</div>
 </div>
 
 <script>
-// 账号系统
-const validUsers = {
-    "2301630111": "123456"
-};
-
-function login() {
-    const id = document.getElementById('student-id').value;
-    const pwd = document.getElementById('student-pwd').value;
-    if (validUsers[id] && validUsers[id] === pwd) {
-        document.getElementById('login-page').classList.add('hidden');
-        document.getElementById('main-page').classList.remove('hidden');
-    } else {
-        alert('学号或密码错误');
-    }
+function login(){
+const id=sid.value,pw=spw.value;
+if(id=="2301630111"&&pw=="123456"){
+login.style.display='none';
+main.style.display='block';
+}else{alert('账号密码错误')}
 }
-
-function logout() {
-    document.getElementById('login-page').classList.remove('hidden');
-    document.getElementById('main-page').classList.add('hidden');
+function backLogin(){main.style.display='none';login.style.display='block'}
+function show(t){
+document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));
+document.querySelectorAll('.nav button').forEach(e=>e.classList.remove('active'));
+document.getElementById(t).classList.add('active');
+event.target.classList.add('active');
 }
-
-// 页面切换
-function showTab(tab) {
-    document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-    document.querySelectorAll('.nav-btn').forEach(el => {
-        el.classList.remove('text-primary', 'font-medium');
-        el.classList.add('text-gray-600');
-    });
-    document.getElementById(`${tab}-tab`).classList.remove('hidden');
-    document.querySelector(`.tab-${tab}`).classList.add('text-primary', 'font-medium');
-    document.querySelector(`.tab-${tab}`).classList.remove('text-gray-600');
-}
-
-// 真实免费AI大模型 上线无跨域版
-async function sendChat(){
-    const input = document.getElementById('chat-input');
-    const content = input.value.trim();
-    if(!content) return;
-
-    const box = document.getElementById('chat-box');
-    box.innerHTML += `<div class="flex justify-end mb-4">
-        <div class="bg-primary text-white p-3 rounded-lg max-w-[80%]">${content}</div>
-    </div>`;
-    input.value = '';
-    box.scrollTop = box.scrollHeight;
-
-    const loading = document.createElement('div');
-    loading.className = 'flex justify-start mb-4';
-    loading.innerHTML = `<div class="bg-primary/10 p-3 rounded-lg max-w-[80%]">AI思考中...</div>`;
-    box.appendChild(loading);
-
-    try{
-        // 国内永久免费AI接口，上线网站完美兼容无跨域
-        const res = await fetch("https://api.52vmy.cn/api/chat/gpt?msg="+encodeURIComponent(content));
-        const json = await res.json();
-        const reply = json.data;
-        box.removeChild(loading);
-        box.innerHTML += `<div class="flex justify-start mb-4">
-            <div class="bg-primary/10 p-3 rounded-lg max-w-[80%]">${reply}</div>
-        </div>`;
-    }catch(e){
-        box.removeChild(loading);
-        box.innerHTML += `<div class="flex justify-start mb-4">
-            <div class="bg-primary/10 p-3 rounded-lg max-w-[80%]">网络波动，请重新发送提问</div>
-        </div>`;
-    }
-}
-
-// 知识图谱内容
-function showGraph(subject) {
-    const content = document.getElementById('graph-content');
-    const data = {
-        math: `
-        <div class="text-center">
-            <h3 class="font-bold text-xl text-blue-600">数学知识图谱</h3>
-            <div class="mt-4 text-left max-w-2xl mx-auto space-y-2">
-                <p>🔹 基础运算 → 代数 → 一元方程 → 函数 → 三角函数</p>
-                <p>🔹 平面图形 → 三角形 → 勾股定理 → 四边形 → 圆</p>
-                <p>🔹 统计基础 → 概率计算 → 综合数据分析</p>
-            </div>
-        </div>`,
-        chinese: `
-        <div class="text-center">
-            <h3 class="font-bold text-xl text-green-600">语文知识图谱</h3>
-            <div class="mt-4 text-left max-w-2xl mx-auto space-y-2">
-                <p>🔹 拼音 → 汉字 → 词语 → 病句句式</p>
-                <p>🔹 记叙文 → 说明文 → 议论文 → 散文小说</p>
-                <p>🔹 古诗词鉴赏 → 文言文解析 → 现代文阅读写作</p>
-            </div>
-        </div>`,
-        english: `
-        <div class="text-center">
-            <h3 class="font-bold text-xl text-orange-600">英语知识图谱</h3>
-            <div class="mt-4 text-left max-w-2xl mx-auto space-y-2">
-                <p>🔹 字母音标 → 单词词汇 → 基础句型</p>
-                <p>🔹 一般时态 → 进行时态 → 完成时态</p>
-                <p>🔹 听力口语 → 阅读理解 → 书面写作</p>
-            </div>
-        </div>`
-    };
-    content.innerHTML = data[subject];
-}
-
-// 育儿游戏剧情
-function gameChoose(option) {
-    const title = document.getElementById('game-title');
-    const desc = document.getElementById('game-desc');
-    const options = document.getElementById('game-options');
-    
-    if (option === 1) {
-        title.textContent = "结局：孩子产生强烈抵触情绪";
-        desc.textContent = "强硬管教让孩子内心委屈逆反，关闭沟通意愿，学习积极性大幅下降，亲子关系裂痕加深。";
-    } else if (option === 2) {
-        title.textContent = "结局：孩子养成良好自律习惯";
-        desc.textContent = "公平约定让孩子主动优先完成作业，合理享受娱乐时间，时间管理能力稳步提升。";
-    } else {
-        title.textContent = "结局：完美正向成长结局";
-        desc.textContent = "平等沟通陪伴让孩子理解学习意义，兼顾成长与娱乐，亲子亲密关系提升，综合能力全面发展。";
-    }
-    options.innerHTML = `<button onclick="resetGame()" class="w-full bg-primary text-white py-3 rounded-lg">重新开始模拟体验</button>`;
-}
-
-function resetGame() {
-    document.getElementById('game-title').textContent = "孩子放学回家一直玩手机";
-    document.getElementById('game-desc').textContent = "孩子放学回家，作业没写就开始玩手机游戏，你会怎么做？";
-    document.getElementById('game-options').innerHTML = `
-        <div class="game-option" onclick="gameChoose(1)">
-            直接没收手机，严厉批评
-            <div class="text-xs text-red-500 mt-1">后果：亲子关系 -20</div>
-        </div>
-        <div class="game-option" onclick="gameChoose(2)">
-            约定写完作业后可以玩30分钟
-            <div class="text-xs text-green-500 mt-1">效果：自律习惯 +15</div>
-        </div>
-        <div class="game-option" onclick="gameChoose(3)">
-            陪孩子一起制定学习+娱乐计划
-            <div class="text-xs text-primary mt-1">效果：亲子关系 +10，自律+10</div>
-        </div>
-    `;
+async function send(){
+const txt=msg.value.trim();if(!txt)return;
+chat.innerHTML+=`<div class="msg you">${txt}</div>`;msg.value='';
+chat.innerHTML+=`<div class="msg ai">正在思考...</div>`;
+const res=await fetch('https://api.52vmy.cn/api/chat/gpt?msg='+encodeURIComponent(txt));
+const d=await res.json();
+chat.lastElementChild.innerHTML=d.data;
 }
 </script>
 </body>
